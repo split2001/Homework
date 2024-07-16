@@ -22,7 +22,7 @@ class Predator(Animal):
         else:
             print(f"{self.name} не стал есть {food.name}")
 class Flower(Plant):
-    edible = False
+    
 class Fruit(Plant):
     edible = True
 
