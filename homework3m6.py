@@ -10,7 +10,6 @@ class Horse:
 
 class Eagle:
     def __init__(self):
-        super().__init__()
         self.y_distance = 0 #высота полета
         self.sound = 'I train, eat, sleep, and repeat'
 
