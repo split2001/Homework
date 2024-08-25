@@ -15,13 +15,11 @@ time_res = time_end - time_start
 print(time_res)
 
 
-
 if __name__ == '__main__':
     filenames = [f'./file {number}.txt' for number in range(1, 5)]
-    for file in filenames:
-        with multiprocessing.Pool(processes=4) as pool:
-            time_start = datetime.now()
-            pool.map(read_info, filenames)
+    time_start = datetime.now()
+    with multiprocessing.Pool(processes=4) as pool:
+        pool.map(read_info, filenames)
     time_end = datetime.now()
     time_res = time_end - time_start
     print(time_res)
