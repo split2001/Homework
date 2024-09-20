@@ -1,0 +1,16 @@
+2024-09-20 15:21:53,517 -WARNING - test_run - Неверный тип данных для объекта Runner
+Traceback (most recent call last):
+  File "C:\Users\davla\PycharmProjects\pythonProject2\Python Homework\Module12\runnertestwithexeptions.py", line 27, in test_run
+    runner = Runner(True, 20)
+             ^^^^^^^^^^^^^^^^
+  File "C:\Users\davla\PycharmProjects\pythonProject2\Python Homework\Module12\runnerwithexeptions.py", line 6, in __init__
+    raise TypeError(f'Имя может быть только строкой, передано {type(name).__name__}')
+TypeError: Имя может быть только строкой, передано bool
+2024-09-20 15:21:53,518 -WARNING - test_walk - Неверная скорость для Runner
+Traceback (most recent call last):
+  File "C:\Users\davla\PycharmProjects\pythonProject2\Python Homework\Module12\runnertestwithexeptions.py", line 16, in test_walk
+    walker = Runner('bob', -5)
+             ^^^^^^^^^^^^^^^^^
+  File "C:\Users\davla\PycharmProjects\pythonProject2\Python Homework\Module12\runnerwithexeptions.py", line 11, in __init__
+    raise ValueError(f'Скорость не может быть отрицательной, сейчас {speed}')
+ValueError: Скорость не может быть отрицательной, сейчас -5
