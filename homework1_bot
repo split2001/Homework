@@ -1,0 +1,27 @@
+from aiogram import Bot, Dispatcher, executor, types
+from aiogram.contrib.fsm_storage.memory import MemoryStorage
+import asyncio
+
+api = 'api'
+bot = Bot(token=api)
+dp = Dispatcher(bot, storage=MemoryStorage())
+
+
+# @dp.message_handler(text=['urban'])  # параметр, когда функция реагирует на определенные сообщения
+# async def start(message):
+#     print('Кто-то ввел слово "urban"')
+
+
+@dp.message_handler(commands=['start'])  # параметр, когда функция отрабатывает по определенной команде
+async def start(message):
+    print('Привет! Я бот помогающий твоему здоровью.')
+
+
+@dp.message_handler()  # обработчик всех сообщений, ставим в конец, чтобы не перехватывал остальные команды.
+async def all_massages(message):
+    print('Введите команду /start, чтобы начать общение.')
+
+
+if __name__ == '__main__':
+    executor.start_polling(dp, skip_updates=True)
+    
