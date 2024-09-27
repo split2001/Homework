@@ -1,0 +1,31 @@
+from aiogram import Bot, Dispatcher, executor, types
+from aiogram.contrib.fsm_storage.memory import MemoryStorage
+import asyncio
+
+
+api = 'api'
+bot = Bot(token=api)
+dp = Dispatcher(bot, storage=MemoryStorage())
+
+
+@dp.message_handler(text=['Привет'])  # параметр, когда функция реагирует на определенные сообщения
+async def start(message):
+    print('Кто-то ввел слово "Привет')
+    await message.answer('Привет! Введите команду /start, чтобы начать общение.')
+
+
+@dp.message_handler(commands=['start'])  # параметр, когда функция отрабатывает по определенной команде
+async def start(message):
+    print('Кто-то ввел команду старт')
+    await message.answer('Введите вашу ФИО и я покажу вам магию!')
+
+
+@dp.message_handler()  # обработчик всех сообщений, ставим в конец, чтобы не перехватывал остальные команды.
+async def all_massages(message):
+    print('Введите команду /start, чтобы начать общение.')
+    # await message.answer(message.text) обратный ответ сообщением пользователя
+    await message.answer(message.text.upper())  # обратный ответ сообщением пользователя с методом upper,lower
+
+
+if __name__ == '__main__':
+    executor.start_polling(dp, skip_updates=True)
