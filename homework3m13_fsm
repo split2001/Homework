@@ -1,0 +1,61 @@
+from aiogram import Bot, Dispatcher, executor, types
+from aiogram.contrib.fsm_storage.memory import MemoryStorage
+from aiogram.dispatcher.filters.state import State, StatesGroup  # машина состояний
+from aiogram.dispatcher import FSMContext  # машина состояний
+import asyncio
+
+
+api = 'apii'
+bot = Bot(token=api)
+dp = Dispatcher(bot, storage=MemoryStorage())
+
+
+class UserState(StatesGroup):
+    age = State()
+    growth = State()
+    weight = State()
+
+
+@dp.message_handler(commands=['start'])  # параметр, когда функция отрабатывает по определенной команде
+async def start_2(message):
+    await message.answer('Привет. Я бот,который помогает следить за здоровьем. Введите команду Calories,'
+                         'чтобы сделать расчет.')
+
+
+@dp.message_handler(text=['Calories', 'calories'])  # параметр, когда функция реагирует на определенные сообщения
+async def set_age(message):
+    await message.answer('Введите,пожалуйста, свой возраст.')  # вывод сообщения пользователю
+    await UserState.age.set()  # ожидаем ввода возраста в атрибут UserState.age и устанавливаем его
+
+
+@dp.message_handler(state=UserState.age)  # handler, который откликается на переданное состояние UserState.age
+async def set_growth(message, state):
+    await state.update_data(age=message.text)
+    await message.answer('Отлично! Теперь укажите свой рост.')
+    await UserState.growth.set()  # ожидаем ввода роста в атрибут UserState.growth и устанавливаем его
+
+
+@dp.message_handler(state=UserState.growth)  # handler, который откликается на переданное состояние UserState.growth
+async def set_weight(message, state):
+    await state.update_data(growth=message.text)
+    await message.answer('Супер. Последний этап - Ваш вес.')
+    await UserState.weight.set()  # ожидаем ввода веса в атрибут UserState.weight и устанавливаем его
+
+
+@dp.message_handler(state=UserState.weight)  # handler, который откликается на переданное состояние UserState.weight
+async def send_calories(message, state):
+    await state.update_data(weight=message.text)
+    data = await state.get_data()  # запоминаем в переменную data все ранее введённые состояния
+    # составляем формулу использую ключи к словарю с состояниями
+    formula = 10 * int(data['weight']) + 6.25 * int(data['growth']) - 5 * int(data['age']) + 5
+    await message.answer(f'Ваша норма калорий:{formula}')
+    await state.finish()  # закрываем машину состояний
+
+
+@dp.message_handler()  # обработчик всех сообщений, ставим в конец, чтобы не перехватывал остальные команды.
+async def all_massages(message):
+    await message.answer('Введите команду /start, чтобы начать.')
+
+
+if __name__ == '__main__':
+    executor.start_polling(dp, skip_updates=True)
