@@ -29,7 +29,10 @@ async def get_users():
 async def create_user(
         username: Annotated[str, Path(min_length=5, max_length=20, description='Enter username', example='UrbanUser')],
         age: Annotated[int, Path(ge=18, le=120, description='Enter age', example=24)]):
-    user_id = len(users) + 1
+    if len(users) == 0:
+        user_id = 1
+    else:
+        user_id = users[-1].id + 1  # больше на 1,чем последний элемент в списке
     new_user = User(id=user_id, username=username, age=age)
     users.append(new_user)
     return new_user
@@ -45,14 +48,14 @@ async def update_user(
             user.username = username
             user.age = age
             return user
-    raise HTTPException(status_code=404, detail=f'User {user_id} was not found')
+    raise HTTPException(status_code=404, detail=f'User was not found')
 
 
 @app.delete('/user/{user_id}')
 async def delete_user(user_id: int):
     for user in users:
         if user.id == user_id:
-            users.pop(user_id - 1)
+            users.pop(user.id - 1)
             return user
     raise HTTPException(status_code=404, detail='User was not found')
 
