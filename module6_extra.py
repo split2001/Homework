@@ -59,8 +59,8 @@ class Circle(Figure):
 
     def get_square(self):
         self.set_radius()
-        return (self.__radius ** 2) * 3.141569  # как в школе через радиус
-        # return ((self.side)**2)/(4 * 3.141569) # через длину окружности
+        return (self.__radius ** 2) * 3.141569  
+       
 
 
 class Triangle(Figure):
